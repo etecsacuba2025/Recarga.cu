@@ -1,1 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Facebook - GitHub Pages</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div id="login-section" class="section">
+            <h1>🔐 Dashboard Facebook</h1>
+            <p>Gestiona tu página de Facebook de forma segura</p>
+            <button onclick="loginToFacebook()" class="btn btn-primary">
+                Conectar con Facebook
+            </button>
+        </div>
+        
+        <div id="dashboard" class="section" style="display:none;">
+            <h2>📊 Panel de Control</h2>
+            <div class="btn-group">
+                <button onclick="likeRecentPost()" class="btn btn-success">
+                    👍 Like Publicación Reciente
+                </button>
+                <button onclick="getPageInsights()" class="btn btn-info">
+                    📈 Ver Estadísticas
+                </button>
+            </div>
+            <div id="result" class="result-box"></div>
+        </div>
+    </div>
 
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+  </html>
