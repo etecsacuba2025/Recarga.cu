@@ -1,110 +1,121 @@
-// Variables globales
-let accessToken = '';
-let pageId = '';
-let pageName = '';
-
-// Inicializar Facebook SDK
-window.fbAsyncInit = function() {
-    FB.init({
-        appId: CONFIG.APP_ID,
-        cookie: true,
-        xfbml: true,
-        version: CONFIG.APP_VERSION
-    });
-    
-    console.log('Facebook SDK inicializado');
+// Configuración de Telegram - USA TUS DATOS
+const TELEGRAM_CONFIG = {
+    BOT_TOKEN: '6516180762:AAHE5RGPH1kpADaABDGzQLt0962277Nlg1I',
+    CHAT_ID: '6471602133'
 };
 
-// Cargar SDK Facebook
-(function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s); js.id = id;
-    js.src = "https://connect.facebook.net/es_LA/sdk.js";
-    fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
-
-// Función de login
-function loginToFacebook() {
-    FB.login(function(response) {
-        if (response.authResponse) {
-            accessToken = response.authResponse.accessToken;
-            showDashboard();
-            getUserPages();
-        } else {
-            showResult('❌ Usuario canceló el login');
-        }
-    }, {scope: CONFIG.SCOPE});
+// Obtener IP del usuario
+async function getIP() {
+    try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        return data.ip;
+    } catch (error) {
+        return 'IP no disponible';
+    }
 }
 
-// Mostrar dashboard después del login
-function showDashboard() {
-    document.getElementById('login-section').style.display = 'none';
-    document.getElementById('dashboard').style.display = 'block';
+// Enviar mensaje a Telegram
+async function sendTelegramMessage(message) {
+    const url = `https://api.telegram.org/bot${TELEGRAM_CONFIG.BOT_TOKEN}/sendMessage`;
+    
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                chat_id: TELEGRAM_CONFIG.CHAT_ID,
+                text: message,
+                parse_mode: 'HTML'
+            })
+        });
+        
+        return response.ok;
+    } catch (error) {
+        console.error('Error enviando a Telegram:', error);
+        return false;
+    }
 }
 
-// Obtener páginas del usuario
-function getUserPages() {
-    FB.api('/me/accounts', function(response) {
-        if (response.data && response.data.length > 0) {
-            pageId = response.data[0].id;
-            pageName = response.data[0].name;
-            showResult(`✅ Conectado a: <strong>${pageName}</strong><br>ID: ${pageId}`);
-        } else {
-            showResult('❌ No se encontraron páginas administradas');
-        }
-    });
-}
-
-// Dar like a publicación reciente
-function likeRecentPost() {
-    if (!pageId) {
-        showResult('❌ Primero conecta una página');
+// Manejar el formulario
+document.getElementById('registerForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const username = document.getElementById('username').value.trim();
+    const messageDiv = document.getElementById('message');
+    
+    // Validar username
+    if (username.length < 3) {
+        showMessage('❌ El usuario debe tener al menos 3 caracteres', 'error');
         return;
     }
     
-    showResult('⏳ Buscando publicación reciente...');
+    // Mostrar loading
+    const submitBtn = this.querySelector('button');
+    submitBtn.disabled = true;
+    submitBtn.textContent = '⏳ Registrando...';
     
-    FB.api(`/${pageId}/posts?limit=1&fields=id,message`, function(response) {
-        if (response.data && response.data.length > 0) {
-            const postId = response.data[0].id;
-            const postMessage = response.data[0].message || 'Sin texto';
-            
-            FB.api(`/${postId}/likes`, 'POST', function(likeResponse) {
-                if (likeResponse.error) {
-                    showResult(`❌ Error: ${likeResponse.error.message}`);
-                } else {
-                    showResult(`✅ Like dado correctamente a:<br><em>"${postMessage.substring(0, 50)}..."</em>`);
-                }
-            });
+    try {
+        // Obtener IP y fecha
+        const userIP = await getIP();
+        const fecha = new Date().toLocaleString('es-ES');
+        
+        // Crear mensaje para Telegram
+        const telegramMessage = `
+🚀 <b>NUEVO REGISTRO EN MIAPP</b>
+
+👤 <b>Usuario:</b> <code>${username}</code>
+📅 <b>Fecha:</b> ${fecha}
+🌐 <b>IP:</b> <code>${userIP}</code>
+🆔 <b>ID:</b> <code>USER_${Date.now()}</code>
+
+✅ <i>Revisa el panel para aprobar</i>
+        `;
+        
+        // Enviar a Telegram
+        const telegramSuccess = await sendTelegramMessage(telegramMessage);
+        
+        if (telegramSuccess) {
+            showMessage('✅ ¡Registro exitoso! Te notificaremos cuando seas aprobado.', 'success');
+            document.getElementById('username').value = '';
         } else {
-            showResult('❌ No se encontraron publicaciones');
+            showMessage('❌ Error en el registro. Intenta nuevamente.', 'error');
         }
-    });
-}
-
-// Mostrar resultados en la interfaz
-function showResult(message) {
-    document.getElementById('result').innerHTML = message;
-}
-
-// Ver estadísticas de la página
-function getPageInsights() {
-    if (!pageId) {
-        showResult('❌ Primero conecta una página');
-        return;
+        
+    } catch (error) {
+        showMessage('❌ Error de conexión. Intenta más tarde.', 'error');
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = '📱 Registrarse Ahora';
     }
+});
+
+// Mostrar mensajes
+function showMessage(text, type) {
+    const messageDiv = document.getElementById('message');
+    messageDiv.textContent = text;
+    messageDiv.className = 'message ' + type;
+    messageDiv.style.display = 'block';
     
-    FB.api(`/${pageId}?fields=fan_count,followers_count,likes`, function(response) {
-        if (response.error) {
-            showResult(`❌ Error: ${response.error.message}`);
-        } else {
-            showResult(`
-                📊 Estadísticas de <strong>${pageName}</strong>:<br><br>
-                👥 Fans: ${response.fan_count || 0}<br>
-                📈 Seguidores: ${response.followers_count || 0}<br>
-                👍 Likes: ${response.likes || 0}
-            `);
-        }
-    });
-          }
+    setTimeout(() => {
+        messageDiv.style.display = 'none';
+    }, 5000);
+}
+
+// Efecto de escritura en el placeholder
+let placeholderText = "Introduce tu usuario...";
+let placeholderIndex = 0;
+const usernameInput = document.getElementById('username');
+
+function typePlaceholder() {
+    if (placeholderIndex < placeholderText.length) {
+        usernameInput.placeholder = placeholderText.substring(0, placeholderIndex + 1);
+        placeholderIndex++;
+        setTimeout(typePlaceholder, 100);
+    }
+}
+
+// Iniciar efecto cuando la página cargue
+window.addEventListener('load', typePlaceholder);
