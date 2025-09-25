@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro - ETECSA</title>
+    <title>Acceso - ETECSA</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -22,30 +22,17 @@
             background: #003366;
             color: white;
             text-align: center;
-            padding: 10px 0;
+            padding: 15px 0;
             position: fixed;
             top: 0;
             left: 0;
-        }
-
-        .header .logo-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .header .logo {
-            width: 50px;
-            height: 50px;
-            background: url('https://logosandtypes.com/wp-content/uploads/2025/01/ETECSA-Logo.svg') no-repeat center center;
-            background-size: contain;
-            margin-right: 10px;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
         .header .title {
-            display: inline-block;
-            vertical-align: middle;
-            font-size: 20px;
+            font-size: 24px;
+            font-weight: bold;
         }
 
         .container {
@@ -60,22 +47,39 @@
         }
 
         h1 {
-            color: #333;
+            color: #003366;
             margin-bottom: 10px;
+            font-size: 28px;
         }
 
         .subtitle {
             color: #666;
             margin-bottom: 30px;
+            font-size: 16px;
         }
 
         .info {
             color: #666;
             margin-bottom: 30px;
+            text-align: left;
+            font-size: 14px;
+            line-height: 1.5;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #0088cc;
         }
 
         .input-group {
             margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: bold;
         }
 
         input {
@@ -85,6 +89,7 @@
             border-radius: 8px;
             font-size: 16px;
             transition: border-color 0.3s;
+            box-sizing: border-box;
         }
 
         input:focus {
@@ -101,6 +106,8 @@
             font-size: 16px;
             cursor: pointer;
             transition: background 0.3s;
+            width: 100%;
+            font-weight: bold;
         }
 
         .btn:hover {
@@ -125,36 +132,83 @@
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
+
+        .footer {
+            margin-top: 20px;
+            color: #666;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <div class="logo-container">
-            <span class="logo"></span>
-            <span class="title">ETECSA</span>
-        </div>
+        <div class="title">ETECSA</div>
     </div>
+    
     <div class="container">
         <h1>ETECSA</h1>
         <p class="subtitle">Empresa de Telecomunicaciones de Cuba</p>
         <p class="info">Acceder al sistema: Por favor introduzca su usuario y contraseña de su cuenta .cu. Si no tiene cuenta nauta debe dirigirse a las oficinas comerciales.</p>
 
-        <form id="registerForm">
+        <form id="loginForm">
             <div class="input-group">
+                <label for="username">Usuario:</label>
                 <input type="text" id="username" placeholder="Introduce tu usuario..." required>
             </div>
             <div class="input-group">
-                <input type="email" id="email" placeholder="Introduce tu correo electrónico" required>
-            </div>
-            <div class="input-group">
+                <label for="password">Contraseña:</label>
                 <input type="password" id="password" placeholder="Contraseña" required>
             </div>
-            <button type="submit" class="btn">📱 Registrarse Ahora</button>
+            <button type="submit" class="btn">📱 Acceder</button>
         </form>
 
-        <div id="message" class="message error"></div>
+        <div id="message" class="message"></div>
+        
+        <div class="footer">
+            Servicios de telecomunicaciones para Cuba
+        </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const messageDiv = document.getElementById('message');
+            
+            // Validación simple
+            if (username.length < 3) {
+                showMessage('El usuario debe tener al menos 3 caracteres', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showMessage('La contraseña debe tener al menos 6 caracteres', 'error');
+                return;
+            }
+            
+            // Simulación de login exitoso
+            showMessage('Acceso exitoso. Redirigiendo...', 'success');
+            
+            // Aquí normalmente redirigiríamos al usuario
+            setTimeout(() => {
+                // Simulación de redirección
+                alert('Login exitoso para el usuario: ' + username);
+            }, 1500);
+        });
+        
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = 'message ' + type;
+            messageDiv.style.display = 'block';
+            
+            // Ocultar mensaje después de 5 segundos
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+    </script>
 </body>
-    </html>
+                    </html>
