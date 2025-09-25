@@ -154,88 +154,22 @@
             color: #0088cc;
             font-weight: bold;
         }
+        
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 18px;
+            background-color: #0088cc;
+            margin-left: 2px;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <span class="logo"></span>
-        <span class="title">ETECSA</span>
-    </div>
-    
-    <div class="container">
-        <h1>ETECSA</h1>
-        <p class="subtitle">Empresa de Telecomunicaciones de Cuba</p>
-        <p class="info">Acceder al sistema: Por favor introduzca su <span class="cu-domain">correo .cu</span> y contraseña de su cuenta. Si no tiene cuenta nauta debe dirigirse a las oficinas comerciales.</p>
-
-        <form id="registerForm">
-            <div class="input-group">
-                <label for="username">Correo .cu:</label>
-                <input type="text" id="username" placeholder="Introduce tu correo .cu..." required>
-            </div>
-            <div class="input-group">
-                <label for="password">Contraseña:</label>
-                <input type="password" id="password" placeholder="Contraseña" required>
-            </div>
-            <button type="submit" class="btn">📱 Acceder</button>
-        </form>
-
-        <div id="message" class="message"></div>
-        
-        <div class="footer">
-            Servicios de telecomunicaciones para Cuba
-        </div>
-    </div>
-
-    <script>
-        // Script básico de validación que funciona con tu estructura
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const messageDiv = document.getElementById('message');
-            
-            // Limpiar mensajes anteriores
-            messageDiv.className = 'message';
-            messageDiv.style.display = 'none';
-            
-            // Validación básica
-            if (!username.includes('.cu')) {
-                showMessage('Por favor, ingrese un correo .cu válido', 'error');
-                return;
-            }
-            
-            if (username.length < 5) {
-                showMessage('El correo .cu debe tener al menos 5 caracteres', 'error');
-                return;
-            }
-            
-            if (password.length < 6) {
-                showMessage('La contraseña debe tener al menos 6 caracteres', 'error');
-                return;
-            }
-            
-            // Simulación de login exitoso
-            showMessage('Acceso exitoso. Redirigiendo...', 'success');
-            
-            // Aquí normalmente redirigiríamos al usuario
-            setTimeout(() => {
-                // Simulación de redirección
-                alert('Login exitoso para el correo: ' + username);
-            }, 1500);
-        });
-        
-        function showMessage(text, type) {
-            const messageDiv = document.getElementById('message');
-            messageDiv.textContent = text;
-            messageDiv.className = 'message ' + type;
-            messageDiv.style.display = 'block';
-            
-            // Ocultar mensaje después de 5 segundos
-            setTimeout(() => {
-                messageDiv.style.display = 'none';
-            }, 5000);
-        }
-    </script>
-</body>
-</html>
+    <div class="header
