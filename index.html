@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro - MiApp</title>
+    <title>Login - ETECSA</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -15,7 +15,7 @@
             justify-content: center;
             align-items: center;
         }
-        
+
         .container {
             background: white;
             padding: 40px;
@@ -25,21 +25,21 @@
             max-width: 400px;
             width: 100%;
         }
-        
+
         h1 {
             color: #333;
             margin-bottom: 10px;
         }
-        
+
         .subtitle {
             color: #666;
             margin-bottom: 30px;
         }
-        
+
         .input-group {
             margin-bottom: 20px;
         }
-        
+
         input {
             width: 100%;
             padding: 12px;
@@ -48,12 +48,12 @@
             font-size: 16px;
             transition: border-color 0.3s;
         }
-        
+
         input:focus {
             border-color: #0088cc;
             outline: none;
         }
-        
+
         .btn {
             background: #0088cc;
             color: white;
@@ -64,24 +64,24 @@
             cursor: pointer;
             transition: background 0.3s;
         }
-        
+
         .btn:hover {
             background: #006699;
         }
-        
+
         .message {
             margin-top: 20px;
             padding: 10px;
             border-radius: 5px;
             display: none;
         }
-        
+
         .success {
             background: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
-        
+
         .error {
             background: #f8d7da;
             color: #721c24;
@@ -91,20 +91,22 @@
 </head>
 <body>
     <div class="container">
-        <h1>🚀 MiApp Tools</h1>
-        <p class="subtitle">Regístrate para acceder a las herramientas</p>
-        
-        <form id="registerForm">
+        <h1>📡 ETECSA</h1>
+        <p class="subtitle">Inicia sesión para acceder a nuestros servicios</p>
+
+        <form id="loginForm">
             <div class="input-group">
-                <input type="text" id="username" placeholder="Introduce tu usuario" required>
+                <input type="text" id="username" placeholder="Introduce tu Usuario" required>
             </div>
-            
-            <button type="submit" class="btn">📱 Registrarse Ahora</button>
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Introduce tu Contraseña" required>
+            </div>
+            <button type="submit" class="btn">🔒 Iniciar Sesión</button>
         </form>
-        
+
         <div id="message" class="message"></div>
     </div>
 
     <script src="script.js"></script>
 </body>
-        </html>
+</html>
